@@ -1,1 +1,1 @@
-#Safecryptodeal.com
+Safecryptodeal.com
