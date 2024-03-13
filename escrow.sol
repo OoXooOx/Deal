@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.21;
+pragma solidity 0.8.24;
 
 contract escrow {
     address immutable owner;
@@ -22,17 +22,10 @@ contract escrow {
     mapping(address => bool) public allowedTokens;
 
     event NewDeal(
-        uint256 dealNumber,  
+        uint256 dealNumber,
+        address token,  
         uint256 dealValue,  
         address seller, 
-        string message
-    );
-
-    event NewDealWithToken(
-        uint256 dealNumber, 
-        uint256 dealValue, 
-        address seller,
-        address token,
         string message
     );
 
@@ -60,7 +53,7 @@ contract escrow {
             newDeal.buyer = _buyer;
         }
         activeDeals[msg.sender].push(dealNumber);
-        emit NewDeal(dealNumber, msg.value, msg.sender, _message);
+        emit NewDeal(dealNumber, address(0), msg.value, msg.sender, _message);
     } 
     
     function createDeal(address _buyer, address _token, uint96 _amount, string calldata _message) external {
@@ -83,7 +76,7 @@ contract escrow {
             newDeal.buyer = _buyer;
         }
         activeDeals[msg.sender].push(dealNumber);
-        emit NewDealWithToken(dealNumber, _amount, msg.sender, _token, _message);
+        emit NewDeal(dealNumber,  _token, _amount, msg.sender, _message);
     }  
 
     function abort(uint256 _dealNumber) external {
@@ -122,6 +115,7 @@ contract escrow {
         if(dealForPurchase.token == address(0)){
             require(msg.value == amount, "Wrong value!");   
         } else {
+            require(msg.value == 0, "only tokens"); 
             transferFromERC20(dealForPurchase.token, msg.sender, address(this), amount);
         }
         dealForPurchase.valueBuyer = amount;
