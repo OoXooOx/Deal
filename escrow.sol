@@ -144,9 +144,7 @@ contract escrow {
         completedDeals[dealForComplete.seller].push(_dealNumber);   
         unchecked {
             if(fee!=0) {
-                amountS >= 10 ether
-                ? amountOwner = (amountS * fee) / 2000  // >10ETH  if (fee=10) 0.5%
-                : amountOwner = (amountS * fee) / 1000; // <10ETH  if (fee=10) 1%
+                amountOwner = (amountS * fee) / 1000; // if (fee=10) 1%
             }
             if(dealForComplete.token == address(0)){
                 (bool success, ) = dealForComplete.seller.call{value: amountB - (amountOwner / 2)}("");
